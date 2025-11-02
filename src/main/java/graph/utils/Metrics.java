@@ -1,24 +1,32 @@
 package graph.utils;
 
-
 public class Metrics {
-    public long startNs = 0;
-    public long endNs = 0;
+    private long start, end;
 
-    // SCC Kosaraju
     public long dfs1Visits = 0;
     public long dfs1Edges = 0;
     public long dfs2Visits = 0;
     public long dfs2Edges = 0;
 
-    // Kahn
-    public long kahnPushes = 0;
-    public long kahnPops = 0;
+    private final String name;
 
-    // DAG relaxations
-    public long relaxations = 0;
+    public Metrics(String name) {
+        this.name = name;
+    }
 
-    public void start() { startNs = System.nanoTime(); }
-    public void stop() { endNs = System.nanoTime(); }
-    public long elapsedNs() { return endNs - startNs; }
+    public void startTiming() {
+        start = System.nanoTime();
+    }
+
+    public void stopTiming() {
+        end = System.nanoTime();
+    }
+
+    public long elapsedNs() {
+        return end - start;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
