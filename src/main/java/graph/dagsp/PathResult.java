@@ -3,15 +3,24 @@ package graph.dagsp;
 import java.util.*;
 
 /**
- * Stores path and distance info.
+ * short/long path res.
  */
 public class PathResult {
-    public final long[] dist;
-    public final int[] parent;
-    public PathResult(long[] dist, int[] parent) { this.dist = dist; this.parent = parent; }
+    private final double[] dist;
+    private final int[] parent;
+
+    public PathResult(double[] dist, int[] parent) {
+        this.dist = dist;
+        this.parent = parent;
+    }
+
+    public double[] getDist() { return dist; }
+    public int[] getParent() { return parent; }
+
 
     public List<Integer> reconstruct(int target) {
-        if (dist[target] == Long.MAX_VALUE) return Collections.emptyList();
+        if (target < 0 || target >= parent.length) return Collections.emptyList();
+        if (Double.isInfinite(dist[target]) || dist[target] == Double.POSITIVE_INFINITY) return Collections.emptyList();
         LinkedList<Integer> path = new LinkedList<>();
         int cur = target;
         while (cur != -1) {
