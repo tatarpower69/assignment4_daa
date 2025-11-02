@@ -1,31 +1,46 @@
 package graph.topo;
 
 import graph.utils.Metrics;
-import graph.utils.GraphLoader.Edge;
 
 import java.util.*;
 
 /**
- * Kahn topological sort. Returns an order of nodes or empty list if cycle.
+ * Kahn's alg.
  */
 public class KahnTopoSort {
 
-    public static List<Integer> topoSort(int n, List<Edge>[] adj, Metrics m) {
+    /**
+     * Top sort use Kahn
+     *
+     * @param adj adjacency list
+     * @param metrics metrics object to record pops/pushes
+     */
+    public static List<Integer> topoSort(List<List<Integer>> adj, Metrics metrics) {
+        int n = adj.size();
         int[] indeg = new int[n];
-        for (int u=0;u<n;u++) for (Edge e: adj[u]) indeg[e.v]++;
+        for (int v = 0; v < n; v++) {
+            for (int u : adj.get(v)) indeg[u]++;
+        }
+
         Deque<Integer> q = new ArrayDeque<>();
-        for (int i=0;i<n;i++) if (indeg[i]==0) q.add(i);
+        for (int i = 0; i < n; i++) if (indeg[i] == 0) {
+            q.addLast(i);
+            metrics.countPush();
+        }
+
         List<Integer> order = new ArrayList<>();
         while (!q.isEmpty()) {
-            int u = q.pollFirst();
-            m.kahnPops++;
-            order.add(u);
-            for (Edge e : adj[u]) {
-                indeg[e.v]--;
-                if (indeg[e.v]==0) q.add(e.v);
+            int v = q.removeFirst();
+            metrics.countPop();
+            order.add(v);
+            for (int u : adj.get(v)) {
+                indeg[u]--;
+                if (indeg[u] == 0) {
+                    q.addLast(u);
+                    metrics.countPush();
+                }
             }
         }
-        if (order.size() != n) return new ArrayList<>(); // cycle
         return order;
     }
 }

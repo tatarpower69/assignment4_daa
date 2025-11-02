@@ -1,59 +1,33 @@
 package graph.topo;
 
-import graph.Graph;
 import graph.utils.Metrics;
 
 import java.util.*;
 
 /**
- * DFS-based Topological Sort with metrics tracking.
+ * DFS-based topological sort
  */
 public class DFSTopoSort {
-    private final Graph g;
-    private final Metrics metrics;
-    private boolean hasCycle = false;
 
-    public DFSTopoSort(Graph g, Metrics m) {
-        this.g = g;
-        this.metrics = m;
-    }
-
-    public TopoResult run() {
-        metrics.startTiming();
-        int n = g.n;
-
-        boolean[] visited = new boolean[n];
-        boolean[] onStack = new boolean[n];
+    public static List<Integer> topoSort(List<List<Integer>> adj, Metrics metrics) {
+        int n = adj.size();
+        boolean[] vis = new boolean[n];
         Deque<Integer> stack = new ArrayDeque<>();
-
-        for (int i = 0; i < n; i++) {
-            if (!visited[i]) dfs(i, visited, onStack, stack);
+        for (int v = 0; v < n; v++) if (!vis[v]) dfs(v, vis, stack, adj, metrics);
+        List<Integer> order = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            order.add(stack.removeLast());
         }
-
-        metrics.stopTiming();
-
-        List<Integer> order = new ArrayList<>(stack);
-        Collections.reverse(order); // convert stack → topological order
-
-        return new TopoResult(order, !hasCycle, metrics);
+        return order;
     }
 
-    private void dfs(int u, boolean[] visited, boolean[] onStack, Deque<Integer> stack) {
-        visited[u] = true;
-        onStack[u] = true;
-        metrics.pushOps++;
-
-        for (Graph.Edge e : g.adj.get(u)) {
-            if (hasCycle) return;
-            if (!visited[e.v]) {
-                dfs(e.v, visited, onStack, stack);
-            } else if (onStack[e.v]) {
-                hasCycle = true; // detected cycle → not a DAG
-            }
+    private static void dfs(int v, boolean[] vis, Deque<Integer> stack, List<List<Integer>> adj, Metrics metrics) {
+        vis[v] = true;
+        metrics.countDfsVisit();
+        for (int u : adj.get(v)) {
+            metrics.countEdgeVisit();
+            if (!vis[u]) dfs(u, vis, stack, adj, metrics);
         }
-
-        metrics.popOps++;
-        onStack[u] = false;
-        stack.push(u);
+        stack.addLast(v);
     }
 }
