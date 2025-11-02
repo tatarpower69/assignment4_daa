@@ -1,4 +1,4 @@
 package graph.utils;
 
-public class TimerUtil {
+public class TimerUtil  {
 }

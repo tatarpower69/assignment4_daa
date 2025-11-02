@@ -1,4 +1,4 @@
 package graph.topo;
 
-public class DFSTopoSort {
+public class DFSTopoSort    {
 }

@@ -1,4 +1,4 @@
-package graph.topo;
+package graph.scc;
 
 public class CondensationGraph {
 }
