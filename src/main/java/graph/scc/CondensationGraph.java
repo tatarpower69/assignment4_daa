@@ -4,8 +4,7 @@ import graph.Graph;
 import java.util.*;
 
 /**
- * Builds condensation graph (DAG) from original Graph and SCC partition.
- * Each SCC becomes a node in the condensation DAG.
+ * DAG
  */
 public class CondensationGraph {
 

@@ -4,9 +4,7 @@ import graph.utils.Metrics;
 
 import java.util.*;
 
-/**
- * Result container for SCC computation.
- */
+
 public class SCCResult {
     private final List<List<Integer>> components;
     private final long elapsedNs;
