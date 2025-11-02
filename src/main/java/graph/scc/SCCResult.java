@@ -2,27 +2,33 @@ package graph.scc;
 
 import graph.utils.Metrics;
 
-import java.util.List;
+import java.util.*;
 
+/**
+ * Result container for SCC computation.
+ */
 public class SCCResult {
-    public final List<List<Integer>> components;
-    public final long timeNs;
-    public final long dfs1Visits, dfs1Edges, dfs2Visits, dfs2Edges;
+    private final List<List<Integer>> components;
+    private final long elapsedNs;
+    private final Metrics.Snapshot metrics;
 
-    public SCCResult(List<List<Integer>> comps, Metrics m) {
-        this.components = comps;
-        this.timeNs = m.elapsedNs();
-        this.dfs1Visits = m.dfs1Visits;
-        this.dfs1Edges = m.dfs1Edges;
-        this.dfs2Visits = m.dfs2Visits;
-        this.dfs2Edges = m.dfs2Edges;
+    public SCCResult(List<List<Integer>> components, long elapsedNs, Metrics.Snapshot metrics) {
+        this.components = components;
+        this.elapsedNs = elapsedNs;
+        this.metrics = metrics;
     }
 
-    public int componentCount() {
-        return components.size();
-    }
+    public List<List<Integer>> getComponents() { return components; }
+    public long getElapsedNs() { return elapsedNs; }
+    public Metrics.Snapshot getMetrics() { return metrics; }
 
-    public double avgComponentSize() {
-        return components.stream().mapToInt(List::size).average().orElse(0);
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SCC count=").append(components.size()).append(", time(ns)=").append(elapsedNs).append("\n");
+        for (int i = 0; i < components.size(); i++) {
+            sb.append(String.format("  comp %d (size=%d): %s\n", i, components.get(i).size(), components.get(i)));
+        }
+        sb.append("Metrics: ").append(metrics).append("\n");
+        return sb.toString();
     }
 }

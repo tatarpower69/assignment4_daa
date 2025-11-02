@@ -1,37 +1,39 @@
 package graph.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import graph.Graph;
 
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
 
-
+/**
+ * Simple JSON loader. Expects a JSON like:
+ * {
+ *   "n": 5,
+ *   "edges": [ {"from":0,"to":1,"w":3}, {"from":1,"to":2,"w":4} ]
+ * }
+ *
+ * Save files under /data and call GraphLoader.loadFromFile(path).
+ */
 public class GraphLoader {
-    public static class EdgeJson { public int u; public int v; public long w; }
-    public static class GraphJson {
-        public boolean directed;
-        public int n;
-        public List<EdgeJson> edges;
-        public Integer source;
-        @SerializedName("weight_model")
-        public String weightModel;
-    }
+    private static final ObjectMapper M = new ObjectMapper();
 
-    private static final Gson GSON = new Gson();
-
-    public static GraphJson loadJson(String path) throws Exception {
-        try (FileReader fr = new FileReader(path)) {
-            return GSON.fromJson(fr, GraphJson.class);
-        }
-    }
-
-    public static Graph toGraph(GraphJson gjson) {
-        Graph g = new Graph(gjson.n);
-        if (gjson.edges != null) {
-            for (EdgeJson e : gjson.edges) g.addEdge(e.u, e.v, e.w);
+    public static Graph loadFromFile(String path) throws IOException {
+        JsonNode root = M.readTree(new File(path));
+        int n = root.path("n").asInt();
+        Graph g = new Graph(n);
+        JsonNode edges = root.path("edges");
+        if (edges.isArray()) {
+            Iterator<JsonNode> it = edges.elements();
+            while (it.hasNext()) {
+                JsonNode e = it.next();
+                int from = e.path("from").asInt();
+                int to = e.path("to").asInt();
+                int w = e.has("w") ? e.path("w").asInt() : 1;
+                g.addEdge(from, to, w);
+            }
         }
         return g;
     }

@@ -1,40 +1,43 @@
 package graph.scc;
 
 import graph.Graph;
-
 import java.util.*;
 
-
+/**
+ * Builds condensation graph (DAG) from original Graph and SCC partition.
+ * Each SCC becomes a node in the condensation DAG.
+ */
 public class CondensationGraph {
-    private final int compCount;
-    private final List<List<Graph.Edge>> compAdj;
-    private final int[] compOf;
 
-    public CondensationGraph(Graph g, List<List<Integer>> components) {
-        this.compCount = components.size();
-        this.compAdj = new ArrayList<>(compCount);
-        for (int i = 0; i < compCount; i++) compAdj.add(new ArrayList<>());
-        this.compOf = new int[g.n];
-        for (int i = 0; i < components.size(); i++) {
-            for (int v : components.get(i)) compOf[v] = i;
+    /**
+     * Build adjacency list of condensation DAG: list of lists of ints (component indices).
+     * No parallel edges (uses sets).
+     *
+     * @param original input graph
+     * @param sccs list of components (each is list of node ids)
+     * @return adjacency of condensation graph (size = sccs.size())
+     */
+    public static List<List<Integer>> buildCondensation(Graph original, List<List<Integer>> sccs) {
+        int m = sccs.size();
+        Map<Integer, Integer> nodeToComp = new HashMap<>();
+        for (int i = 0; i < m; i++) {
+            for (int v : sccs.get(i)) nodeToComp.put(v, i);
         }
-        Set<Long> seen = new HashSet<>();
-        for (int u = 0; u < g.n; u++) {
-            for (Graph.Edge e : g.adj.get(u)) {
-                int cu = compOf[u], cv = compOf[e.v];
-                if (cu != cv) {
-                    long key = ((long) cu << 32) | (cv & 0xffffffffL);
-                    if (!seen.contains(key)) {
-                        seen.add(key);
-                        // weight: keep original weight
-                        compAdj.get(cu).add(new Graph.Edge(cu, cv, e.w));
-                    }
-                }
+
+        List<Set<Integer>> sets = new ArrayList<>(m);
+        for (int i = 0; i < m; i++) sets.add(new HashSet<>());
+
+        int n = original.size();
+        for (int v = 0; v < n; v++) {
+            int a = nodeToComp.get(v);
+            for (Graph.Edge e : original.getAdjacency().get(v)) {
+                int b = nodeToComp.get(e.to);
+                if (a != b) sets.get(a).add(b);
             }
         }
-    }
 
-    public int getCompCount() { return compCount; }
-    public List<List<Graph.Edge>> getCompAdj() { return compAdj; }
-    public int[] getCompOf() { return compOf; }
+        List<List<Integer>> dag = new ArrayList<>();
+        for (Set<Integer> s : sets) dag.add(new ArrayList<>(s));
+        return dag;
+    }
 }
