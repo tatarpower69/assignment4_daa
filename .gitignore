@@ -37,3 +37,10 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# Logs and temp
+*.log
+*.tmp
+
+# OS/Editor junk
+Thumbs.db
