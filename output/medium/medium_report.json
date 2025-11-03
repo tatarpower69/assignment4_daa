@@ -1,0 +1,179 @@
+{
+  "graphs": [
+    {
+      "longest_summary": {
+        "average_distance": 3.6666666666666665,
+        "best_path": [
+          3
+        ],
+        "best_distance": 6.0,
+        "reachable_nodes": 3
+      },
+      "metrics": {
+        "DAG_Longest": {
+          "Total_Operations": 24,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 36,
+          "DFS_Visits": 36,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        },
+        "Topological_Sort": {
+          "Total_Operations": 24,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 36,
+          "DFS_Visits": 36,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        },
+        "DAG_Shortest": {
+          "Total_Operations": 24,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 36,
+          "DFS_Visits": 36,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        },
+        "Kosaraju_SCC": {
+          "Total_Operations": 24,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 36,
+          "DFS_Visits": 36,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        }
+      },
+      "shortest_summary": {
+        "average_distance": 1.6666666666666667,
+        "best_path": [
+          3
+        ],
+        "best_distance": 0.0,
+        "reachable_nodes": 3
+      },
+      "scc_count": 8,
+      "graph": "m1"
+    },
+    {
+      "longest_summary": {
+        "average_distance": 2.25,
+        "best_path": [
+          14
+        ],
+        "best_distance": 6.0,
+        "reachable_nodes": 4
+      },
+      "metrics": {
+        "DAG_Longest": {
+          "Total_Operations": 29,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 42,
+          "DFS_Visits": 45,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        },
+        "Topological_Sort": {
+          "Total_Operations": 29,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 42,
+          "DFS_Visits": 45,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        },
+        "DAG_Shortest": {
+          "Total_Operations": 29,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 42,
+          "DFS_Visits": 45,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        },
+        "Kosaraju_SCC": {
+          "Total_Operations": 29,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 42,
+          "DFS_Visits": 45,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        }
+      },
+      "shortest_summary": {
+        "average_distance": 2.25,
+        "best_path": [
+          5
+        ],
+        "best_distance": 0.0,
+        "reachable_nodes": 4
+      },
+      "scc_count": 15,
+      "graph": "m2"
+    },
+    {
+      "longest_summary": {
+        "average_distance": 4.333333333333333,
+        "best_path": [
+          6
+        ],
+        "best_distance": 6.0,
+        "reachable_nodes": 3
+      },
+      "metrics": {
+        "DAG_Longest": {
+          "Total_Operations": 28,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 42,
+          "DFS_Visits": 42,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        },
+        "Topological_Sort": {
+          "Total_Operations": 28,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 42,
+          "DFS_Visits": 42,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        },
+        "DAG_Shortest": {
+          "Total_Operations": 28,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 42,
+          "DFS_Visits": 42,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        },
+        "Kosaraju_SCC": {
+          "Total_Operations": 28,
+          "Push_Ops": 0,
+          "Pop_Ops": 0,
+          "Edge_Visits": 42,
+          "DFS_Visits": 42,
+          "Relaxations": 6,
+          "Elapsed_Time_ns": 0
+        }
+      },
+      "shortest_summary": {
+        "average_distance": 2.3333333333333335,
+        "best_path": [
+          6
+        ],
+        "best_distance": 0.0,
+        "reachable_nodes": 3
+      },
+      "scc_count": 8,
+      "graph": "m3"
+    }
+  ],
+  "dataset": "medium"
+}

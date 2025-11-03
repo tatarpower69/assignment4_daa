@@ -1,33 +1,57 @@
 package graph.topo;
 
+
+import graph.Graph;
 import graph.utils.Metrics;
+
 
 import java.util.*;
 
-/**
- * DFS-based topological sort
- */
+
 public class DFSTopoSort {
 
-    public static List<Integer> topoSort(List<List<Integer>> adj, Metrics metrics) {
-        int n = adj.size();
+
+    // static helper that works on Graph
+    public static List<Integer> topoSort(Graph g, Metrics metrics) {
+        int n = g.size();
         boolean[] vis = new boolean[n];
         Deque<Integer> stack = new ArrayDeque<>();
-        for (int v = 0; v < n; v++) if (!vis[v]) dfs(v, vis, stack, adj, metrics);
+        for (int v = 0; v < n; v++) if (!vis[v]) dfs(v, vis, stack, g, metrics);
         List<Integer> order = new ArrayList<>();
-        while (!stack.isEmpty()) {
-            order.add(stack.removeLast());
-        }
+        while (!stack.isEmpty()) order.add(stack.removeLast());
         return order;
     }
 
-    private static void dfs(int v, boolean[] vis, Deque<Integer> stack, List<List<Integer>> adj, Metrics metrics) {
+
+    private static void dfs(int v, boolean[] vis, Deque<Integer> stack, Graph g, Metrics metrics) {
         vis[v] = true;
         metrics.countDfsVisit();
-        for (int u : adj.get(v)) {
+        for (Graph.Edge e : g.getNeighbors(v)) {
             metrics.countEdgeVisit();
-            if (!vis[u]) dfs(u, vis, stack, adj, metrics);
+            if (!vis[e.getTo()]) dfs(e.getTo(), vis, stack, g, metrics);
         }
         stack.addLast(v);
     }
+
+
+    // instance wrapper used by tests
+    private Graph graph;
+    private Metrics metrics;
+
+
+    public DFSTopoSort() {}
+
+
+    public DFSTopoSort(Graph graph, Metrics metrics) {
+        this.graph = graph; this.metrics = metrics;
+    }
+
+
+    public List<Integer> run() {
+        return topoSort(graph, metrics);
+    }
+
+
+    // also allow run(g, metrics) signature
+    public List<Integer> run(Graph g, Metrics meta) { return topoSort(g, meta); }
 }

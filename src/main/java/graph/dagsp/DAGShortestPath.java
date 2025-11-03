@@ -1,22 +1,17 @@
 package graph.dagsp;
 
+
 import graph.Graph;
 import graph.utils.Metrics;
 
+
 import java.util.*;
 
-/**
- * Single-source shortest paths on DAG (edge-weighted).
- * Uses topological order DP.
- */
+
 public class DAGShortestPath {
 
-    /**
-     * Compute shortest distances from source in DAG of size n.
-     * Input adjacency: for each vertex, list of Graph.Edge (to, weight).
-     *
-     * Returns PathResult with distances and parents.
-     */
+
+    // static implementation (takes Graph + topo order + metrics)
     public static PathResult shortestPath(Graph g, int src, List<Integer> topoOrder, Metrics metrics) {
         int n = g.size();
         double[] dist = new double[n];
@@ -24,15 +19,16 @@ public class DAGShortestPath {
         int[] parent = new int[n];
         Arrays.fill(parent, -1);
 
+
         dist[src] = 0;
 
-        // map topoOrder to its ordering to iterate in topo sequence
+
         for (int v : topoOrder) {
             if (Double.isInfinite(dist[v])) continue;
-            for (Graph.Edge e : g.getAdjacency().get(v)) {
+            for (Graph.Edge e : g.getNeighbors(v)) {
                 metrics.countRelaxation();
-                int u = e.to;
-                double nd = dist[v] + e.weight;
+                int u = e.getTo();
+                double nd = dist[v] + e.getWeight();
                 if (nd < dist[u]) {
                     dist[u] = nd;
                     parent[u] = v;
@@ -40,6 +36,25 @@ public class DAGShortestPath {
             }
         }
 
+
         return new PathResult(dist, parent);
+    }
+
+
+    // instance-style wrapper to match old tests that call new DAGShortestPath(g, metrics)
+    private Graph g;
+    private Metrics metrics;
+
+
+    public DAGShortestPath() {}
+
+
+    public DAGShortestPath(Graph g, Metrics metrics) {
+        this.g = g; this.metrics = metrics;
+    }
+
+
+    public PathResult run(int src, List<Integer> topoOrder) {
+        return shortestPath(g, src, topoOrder, metrics);
     }
 }

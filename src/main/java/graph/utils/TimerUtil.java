@@ -1,7 +1,7 @@
 package graph.utils;
 
 /**
- * Simple timer utility using System.nanoTime().
+ * Simple timer utility using System.nanoTime()
  */
 public class TimerUtil {
     public static class Timer {

@@ -1,20 +1,21 @@
 package graph.scc;
 
+
 import graph.Graph;
 import graph.utils.Metrics;
 import graph.utils.TimerUtil;
 
+
 import java.util.*;
 
+
 public class KosarajuSCC {
+
 
     private final Graph graph;
     private final Metrics metrics;
 
-    /**
-     * @param graph input graph
-     * @param metrics metrics object to accumulate counters
-     */
+
     public KosarajuSCC(Graph graph, Metrics metrics) {
         this.graph = graph;
         this.metrics = metrics;
@@ -27,21 +28,12 @@ public class KosarajuSCC {
         boolean[] vis = new boolean[n];
         Deque<Integer> stack = new ArrayDeque<>();
 
-        // 1) DFS
-        for (int v = 0; v < n; v++) {
-            if (!vis[v]) dfs1(v, vis, stack);
-        }
+
+        for (int v = 0; v < n; v++) if (!vis[v]) dfs1(v, vis, stack);
 
 
-        List<List<Integer>> rev = new ArrayList<>(n);
-        for (int i = 0; i < n; i++) rev.add(new ArrayList<>());
+        Graph trans = graph.transpose();
 
-        for (int v = 0; v < n; v++) {
-            for (Graph.Edge e : graph.getAdjacency().get(v)) {
-                rev.get(e.to).add(v);
-                metrics.countEdgeVisit(); // count edge processing for SCC
-            }
-        }
 
         Arrays.fill(vis, false);
         List<List<Integer>> components = new ArrayList<>();
@@ -49,33 +41,33 @@ public class KosarajuSCC {
             int v = stack.pollLast();
             if (!vis[v]) {
                 List<Integer> comp = new ArrayList<>();
-                dfs2(v, vis, rev, comp);
+                dfs2(v, vis, trans, comp);
                 components.add(comp);
             }
         }
 
-        long elapsedNs = t.stop();
-        SCCResult result = new SCCResult(components, elapsedNs, metrics.snapshot());
-        return result;
+
+        metrics.snapshot();
+        long elapsed = t.stop();
+        return new SCCResult(components);
     }
 
+
     private void dfs1(int v, boolean[] vis, Deque<Integer> stack) {
-        vis[v] = true;
-        metrics.countDfsVisit();
-        for (Graph.Edge e : graph.getAdjacency().get(v)) {
+        vis[v] = true; metrics.countDfsVisit();
+        for (Graph.Edge e : graph.getNeighbors(v)) {
             metrics.countEdgeVisit();
-            if (!vis[e.to]) dfs1(e.to, vis, stack);
+            if (!vis[e.getTo()]) dfs1(e.getTo(), vis, stack);
         }
         stack.addLast(v);
     }
 
-    private void dfs2(int v, boolean[] vis, List<List<Integer>> rev, List<Integer> comp) {
-        vis[v] = true;
-        metrics.countDfsVisit();
-        comp.add(v);
-        for (int u : rev.get(v)) {
+
+    private void dfs2(int v, boolean[] vis, Graph trans, List<Integer> comp) {
+        vis[v] = true; metrics.countDfsVisit(); comp.add(v);
+        for (Graph.Edge e : trans.getNeighbors(v)) {
             metrics.countEdgeVisit();
-            if (!vis[u]) dfs2(u, vis, rev, comp);
+            if (!vis[e.getTo()]) dfs2(e.getTo(), vis, trans, comp);
         }
     }
 }

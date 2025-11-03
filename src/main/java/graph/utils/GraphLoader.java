@@ -1,74 +1,61 @@
 package graph.utils;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.*;
-import com.google.gson.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import graph.Graph;
 
+import java.io.File;
+import java.io.IOException;
+
+/**
+ * Loads JSON dataset into Graph + preserves original fields for tests.
+ */
 public class GraphLoader {
 
-    public static class Edge {
-        public int u;
-        public int v;
-        public int w;
-    }
-
     public static class GraphData {
-        public boolean directed;
-        public int n;
-        public List<Edge> edges;
+        public Graph graph;
         public int source;
-        public String weight_model;
+        public String weightModel;
+
+        // compatibility fields expected by some tests
+        public int n;
+        public JsonNode edges;
+
+        public GraphData(Graph graph, int source, String weightModel, int n, JsonNode edges) {
+            this.graph = graph;
+            this.source = source;
+            this.weightModel = weightModel;
+            this.n = n;
+            this.edges = edges;
+        }
     }
 
-    /**
-     * Load a graph from JSON file.
-     * @param path Path to JSON file (e.g. "data/s1.json")
-     * @return Loaded GraphData object
-     */
     public static GraphData loadGraph(String path) {
-        try (FileReader reader = new FileReader(path)) {
-            Gson gson = new Gson();
-            return gson.fromJson(reader, GraphData.class);
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + path);
-            e.printStackTrace();
-            return null;
-        }
-    }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(new File(path));
 
-    public static Map<Integer, List<int[]>> toAdjList(GraphData data) {
-        Map<Integer, List<int[]>> adj = new HashMap<>();
-        for (int i = 0; i < data.n; i++) {
-            adj.put(i, new ArrayList<>());
-        }
-        for (Edge e : data.edges) {
-            adj.get(e.u).add(new int[]{e.v, e.w});
-            // if undirected support needed in the future
+            boolean directed = root.get("directed").asBoolean();
+            int n = root.get("n").asInt();
+            int source = root.has("source") ? root.get("source").asInt() : 0;
+            String weightModel = root.has("weight_model") ? root.get("weight_model").asText() : "edge";
 
-        }
-        return adj;
-    }
+            Graph g = new Graph(n, directed);
 
-    /**
-     * Smpl print.
-     */
-    public static void printGraph(GraphData data) {
-        System.out.println("Directed: " + data.directed);
-        System.out.println("Nodes: " + data.n);
-        System.out.println("Source: " + data.source);
-        System.out.println("Weight model: " + data.weight_model);
-        System.out.println("Edges:");
-        for (Edge e : data.edges) {
-            System.out.printf("  %d -> %d (w=%d)%n", e.u, e.v, e.w);
-        }
-    }
+            JsonNode edges = root.get("edges");
+            if (edges != null && edges.isArray()) {
+                for (JsonNode e : edges) {
+                    int u = e.get("u").asInt();
+                    int v = e.get("v").asInt();
+                    int w = e.has("w") ? e.get("w").asInt() : 1;
+                    g.addEdge(u, v, w);
+                }
+            }
 
-    // Exmpl:
-    public static void main(String[] args) {
-        GraphData g = loadGraph("data/s1.json");
-        if (g != null) {
-            printGraph(g);
+            g.setSource(source);
+            return new GraphData(g, source, weightModel, n, edges);
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to load graph from " + path, ex);
         }
     }
 }

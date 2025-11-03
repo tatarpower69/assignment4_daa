@@ -1,36 +1,93 @@
 package graph.utils;
 
 /**
- * Simple metrics counters for instrumentation.
+ * Metrics utility class for counting algorithm operations and timing.
  */
 public class Metrics {
-    private long dfsVisits = 0;
-    private long edgeVisits = 0;
-    private long pops = 0;
-    private long pushes = 0;
-    private long relaxations = 0;
 
-    public synchronized void countDfsVisit() { dfsVisits++; }
-    public synchronized void countEdgeVisit() { edgeVisits++; }
-    public synchronized void countPop() { pops++; }
-    public synchronized void countPush() { pushes++; }
-    public synchronized void countRelaxation() { relaxations++; }
+    private int dfsVisits = 0;
+    private int edgeVisits = 0;
+    private int relaxations = 0;
+    private int pushOps = 0;
+    private int popOps = 0;
+    private int operations = 0;
 
-    public Snapshot snapshot() {
-        return new Snapshot(dfsVisits, edgeVisits, pops, pushes, relaxations);
+    private long startTime;
+    private long endTime;
+
+    // === TIMER ===
+    public void startTimer() {
+        startTime = System.nanoTime();
     }
 
-    public static class Snapshot {
-        public final long dfsVisits, edgeVisits, pops, pushes, relaxations;
-        public Snapshot(long dfsVisits, long edgeVisits, long pops, long pushes, long relaxations) {
-            this.dfsVisits = dfsVisits;
-            this.edgeVisits = edgeVisits;
-            this.pops = pops;
-            this.pushes = pushes;
-            this.relaxations = relaxations;
-        }
-        @Override public String toString() {
-            return String.format("dfs=%d edges=%d pops=%d pushes=%d relax=%d", dfsVisits, edgeVisits, pops, pushes, relaxations);
-        }
+    public void stopTimer() {
+        endTime = System.nanoTime();
+    }
+
+    public long getElapsedTime() {
+        return endTime - startTime;
+    }
+
+    // === COUNTERS ===
+    public void countDfsVisit() {
+        dfsVisits++;
+    }
+
+    public void countEdgeVisit() {
+        edgeVisits++;
+    }
+
+    public void countRelaxation() {
+        relaxations++;
+    }
+
+    public void countPush() {
+        pushOps++;
+    }
+
+    public void countPop() {
+        popOps++;
+    }
+
+    public void incrementOperations() {
+        operations++;
+    }
+
+    // === SNAPSHOT (optional metrics print) ===
+    public void snapshot() {
+        System.out.println("--- Metrics Snapshot ---");
+        System.out.println("DFS Visits: " + dfsVisits);
+        System.out.println("Edge Visits: " + edgeVisits);
+        System.out.println("Relaxations: " + relaxations);
+        System.out.println("Push Ops: " + pushOps);
+        System.out.println("Pop Ops: " + popOps);
+        System.out.println("Total Operations: " + operations);
+        System.out.println("Elapsed Time (ns): " + getElapsedTime());
+        System.out.println("-------------------------");
+    }
+
+    // === GETTERS ===
+    public int getDfsVisits() {
+        return dfsVisits;
+    }
+
+    public int getEdgeVisits() {
+        return edgeVisits;
+    }
+
+    public int getRelaxations() {
+        return relaxations;
+    }
+
+    public int getPushOps() {
+        return pushOps;
+    }
+
+    public int getPopOps() {
+        return popOps;
+    }
+
+    public int getOperationCount() {
+        return operations;
     }
 }

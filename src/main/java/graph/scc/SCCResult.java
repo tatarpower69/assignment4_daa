@@ -2,31 +2,49 @@ package graph.scc;
 
 import graph.utils.Metrics;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-
+/**
+ * SCC result container — stores components, optional metrics snapshot and elapsed time.
+ */
 public class SCCResult {
     private final List<List<Integer>> components;
+    private final Metrics metrics;
     private final long elapsedNs;
-    private final Metrics.Snapshot metrics;
 
-    public SCCResult(List<List<Integer>> components, long elapsedNs, Metrics.Snapshot metrics) {
-        this.components = components;
-        this.elapsedNs = elapsedNs;
-        this.metrics = metrics;
+    public SCCResult(List<List<Integer>> components) {
+        this(components, null, 0L);
     }
 
-    public List<List<Integer>> getComponents() { return components; }
-    public long getElapsedNs() { return elapsedNs; }
-    public Metrics.Snapshot getMetrics() { return metrics; }
+    public SCCResult(List<List<Integer>> components, Metrics metrics, long elapsedNs) {
+        this.components = new ArrayList<>(components);
+        this.metrics = metrics;
+        this.elapsedNs = elapsedNs;
+    }
 
+    public List<List<Integer>> getComponents() {
+        return components;
+    }
+
+    // compatibility (some tests call components())
+    public List<List<Integer>> components() {
+        return getComponents();
+    }
+
+    public Metrics getMetrics() { return metrics; }
+    public long getElapsedNs() { return elapsedNs; }
+
+    public int size() { return components.size(); }
+    public boolean isEmpty() { return components.isEmpty(); }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("SCC count=").append(components.size()).append(", time(ns)=").append(elapsedNs).append("\n");
+        sb.append("SCCs: ").append(size()).append("\n");
         for (int i = 0; i < components.size(); i++) {
-            sb.append(String.format("  comp %d (size=%d): %s\n", i, components.get(i).size(), components.get(i)));
+            sb.append("Component ").append(i).append(": ").append(components.get(i)).append("\n");
         }
-        sb.append("Metrics: ").append(metrics).append("\n");
         return sb.toString();
     }
 }
