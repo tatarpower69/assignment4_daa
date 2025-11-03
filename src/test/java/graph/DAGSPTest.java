@@ -33,7 +33,7 @@ public class DAGSPTest {
             assertEquals(data.graph.size(), result.getDistances().length, "Distance array size mismatch");
             assertTrue(metrics.getRelaxations() >= 0, "Relaxations counter should be present");
 
-            System.out.println("✅ DAG ShortestPath OK: " + path);
+            System.out.println(" DAG ShortestPath OK: " + path);
         }
     }
 

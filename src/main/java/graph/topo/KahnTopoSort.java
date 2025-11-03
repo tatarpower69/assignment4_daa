@@ -37,7 +37,6 @@ public class KahnTopoSort {
     }
 
 
-    // instance shim
     private Graph graph;
     private Metrics metrics;
 

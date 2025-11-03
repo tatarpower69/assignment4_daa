@@ -40,7 +40,7 @@ public class SCCAlgorithmTest {
         KosarajuSCC scc = new KosarajuSCC(graph, metrics);
         SCCResult sccResult = scc.run();
 
-        // строим конденсацию
+
         CondensationGraph condensation = new CondensationGraph(
                 convertToSimpleAdj(graph),
                 sccResult,
@@ -52,7 +52,6 @@ public class SCCAlgorithmTest {
         condensation.printCondensation();
     }
 
-    /** Упрощаем структуру смежности до Map<Integer, List<int[]>> для совместимости с CondensationGraph */
     private java.util.Map<Integer, java.util.List<int[]>> convertToSimpleAdj(Graph g) {
         var map = new java.util.HashMap<Integer, java.util.List<int[]>>();
         for (int u = 0; u < g.vertexCount(); u++) {

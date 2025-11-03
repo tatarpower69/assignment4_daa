@@ -39,28 +39,28 @@ public class GraphOutputGenerator {
 
         for (File file : files) {
             try {
-                // Загружаем граф
+                // graph
                 GraphLoader.GraphData data = GraphLoader.loadGraph(file.getPath());
                 Graph graph = data.graph;
 
-                // Запускаем Kosaraju
+                // Kosaraju
                 KosarajuSCC kosaraju = new KosarajuSCC(graph, new Metrics());
                 SCCResult result = kosaraju.run();
 
-                // Формируем JSON с результатом
+                // JSON
                 Map<String, Object> output = new HashMap<>();
                 output.put("input_file", file.getName());
                 output.put("components_count", result.getComponents().size());
                 output.put("components", result.getComponents());
 
-                // Сохраняем файл
+
                 File outFile = new File(outputDir + file.getName());
                 mapper.writerWithDefaultPrettyPrinter().writeValue(outFile, output);
 
-                System.out.println("✅ Saved output: " + outFile.getPath());
+                System.out.println("Saved output: " + outFile.getPath());
 
             } catch (IOException e) {
-                System.err.println("❌ Failed to process " + file.getName() + ": " + e.getMessage());
+                System.err.println("Failed to process " + file.getName() + ": " + e.getMessage());
             }
         }
     }

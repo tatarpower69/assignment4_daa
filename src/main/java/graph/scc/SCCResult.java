@@ -5,9 +5,7 @@ import graph.utils.Metrics;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * SCC result container — stores components, optional metrics snapshot and elapsed time.
- */
+
 public class SCCResult {
     private final List<List<Integer>> components;
     private final Metrics metrics;
@@ -27,7 +25,7 @@ public class SCCResult {
         return components;
     }
 
-    // compatibility (some tests call components())
+
     public List<List<Integer>> components() {
         return getComponents();
     }

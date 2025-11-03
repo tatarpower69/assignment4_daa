@@ -42,13 +42,13 @@ public class DatasetValidationTest {
             assertTrue(graph.vertexCount() > 0, "Graph must have vertices: " + filePath);
             assertTrue(graph.edgeCount() >= 0, "Edge count must be non-negative: " + filePath);
 
-            // unique vertex IDs
+
             Set<Integer> unique = new HashSet<>();
             for (int i = 0; i < graph.vertexCount(); i++) {
                 assertTrue(unique.add(i), "Duplicate vertex id=" + i + " in " + filePath);
             }
 
-            // edges point to valid vertices
+
             for (int u = 0; u < graph.vertexCount(); u++) {
                 for (Graph.Edge e : graph.getAdjList(u)) {
                     assertTrue(e.getTo() >= 0 && e.getTo() < graph.vertexCount(),
@@ -56,7 +56,7 @@ public class DatasetValidationTest {
                 }
             }
 
-            // basic reachability check (DFS from source)
+
             boolean[] visited = new boolean[graph.vertexCount()];
             int src = data.source;
             if (src < 0 || src >= graph.vertexCount()) src = 0;

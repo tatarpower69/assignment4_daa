@@ -7,9 +7,7 @@ import graph.Graph;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Loads JSON dataset into Graph + preserves original fields for tests.
- */
+
 public class GraphLoader {
 
     public static class GraphData {
@@ -17,7 +15,7 @@ public class GraphLoader {
         public int source;
         public String weightModel;
 
-        // compatibility fields expected by some tests
+
         public int n;
         public JsonNode edges;
 

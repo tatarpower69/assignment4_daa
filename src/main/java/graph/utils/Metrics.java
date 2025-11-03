@@ -1,8 +1,6 @@
 package graph.utils;
 
-/**
- * Metrics utility class for counting algorithm operations and timing.
- */
+
 public class Metrics {
 
     private int dfsVisits = 0;
@@ -15,7 +13,7 @@ public class Metrics {
     private long startTime;
     private long endTime;
 
-    // === TIMER ===
+    // TIMER
     public void startTimer() {
         startTime = System.nanoTime();
     }
@@ -28,7 +26,7 @@ public class Metrics {
         return endTime - startTime;
     }
 
-    // === COUNTERS ===
+    // COUNTERS
     public void countDfsVisit() {
         dfsVisits++;
     }
@@ -53,7 +51,6 @@ public class Metrics {
         operations++;
     }
 
-    // === SNAPSHOT (optional metrics print) ===
     public void snapshot() {
         System.out.println("--- Metrics Snapshot ---");
         System.out.println("DFS Visits: " + dfsVisits);
@@ -66,7 +63,6 @@ public class Metrics {
         System.out.println("-------------------------");
     }
 
-    // === GETTERS ===
     public int getDfsVisits() {
         return dfsVisits;
     }

@@ -11,7 +11,6 @@ import java.util.*;
 public class DAGShortestPath {
 
 
-    // static implementation (takes Graph + topo order + metrics)
     public static PathResult shortestPath(Graph g, int src, List<Integer> topoOrder, Metrics metrics) {
         int n = g.size();
         double[] dist = new double[n];
@@ -40,8 +39,6 @@ public class DAGShortestPath {
         return new PathResult(dist, parent);
     }
 
-
-    // instance-style wrapper to match old tests that call new DAGShortestPath(g, metrics)
     private Graph g;
     private Metrics metrics;
 

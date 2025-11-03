@@ -11,7 +11,6 @@ import java.util.*;
 public class DFSTopoSort {
 
 
-    // static helper that works on Graph
     public static List<Integer> topoSort(Graph g, Metrics metrics) {
         int n = g.size();
         boolean[] vis = new boolean[n];
@@ -34,7 +33,7 @@ public class DFSTopoSort {
     }
 
 
-    // instance wrapper used by tests
+
     private Graph graph;
     private Metrics metrics;
 
@@ -52,6 +51,5 @@ public class DFSTopoSort {
     }
 
 
-    // also allow run(g, metrics) signature
     public List<Integer> run(Graph g, Metrics meta) { return topoSort(g, meta); }
 }

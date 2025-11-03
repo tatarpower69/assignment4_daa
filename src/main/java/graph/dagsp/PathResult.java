@@ -19,7 +19,6 @@ public class PathResult {
     public int[] getParent() { return parent; }
 
 
-    // backward-compatible aliases some tests expect
     public double[] getDistances() { return dist; }
     public int[] getParents() { return parent; }
 

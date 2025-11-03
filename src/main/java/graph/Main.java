@@ -20,7 +20,7 @@ import com.google.gson.GsonBuilder;
 public class Main {
 
     public static void main(String[] args) {
-        // Если аргумент есть — обрабатываем только указанную папку, иначе все три
+
         List<String> datasets = (args.length > 0)
                 ? List.of(args[0])
                 : List.of("small", "medium", "large");
@@ -41,7 +41,7 @@ public class Main {
         List<Map<String, Object>> graphResults = new ArrayList<>();
 
         for (File file : Objects.requireNonNull(folder.listFiles((d, name) -> name.endsWith(".json")))) {
-            System.out.println("\n📂 Processing graph: " + file.getName());
+            System.out.println(" Processing graph: " + file.getName());
             Map<String, Object> result = processGraph(file.getPath());
             result.put("graph", file.getName().replace(".json",""));
             graphResults.add(result);
@@ -59,7 +59,7 @@ public class Main {
             FileWriter writer = new FileWriter(new File(outputDir, dataset + "_report.json"));
             gson.toJson(finalJson, writer);
             writer.close();
-            System.out.println("✅ Results saved to: " + outputDir.getPath() + "/" + dataset + "_report.json");
+            System.out.println("Results saved to: " + outputDir.getPath() + "/" + dataset + "_report.json");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,29 +70,28 @@ public class Main {
         Graph g = data.graph;
         Metrics metrics = new Metrics();
 
-        // === SCC ===
+        // SCC
         KosarajuSCC scc = new KosarajuSCC(g, metrics);
         SCCResult sccResult = scc.run();
 
-        // === Конденсация ===
         CondensationGraph cond = new CondensationGraph(convertToAdjMap(g), sccResult, metrics);
         cond.printCondensation();
 
-        // === Топологическая сортировка ===
+
         DFSTopoSort topo = new DFSTopoSort();
         List<Integer> topoOrder = topo.run(g, metrics);
 
-        // === DAG Shortest ===
+        // DAG Shortest
         PathResult shortest = DAGShortestPath.shortestPath(g, data.source, topoOrder, metrics);
 
-        // === DAG Longest ===
+        // DAG Longest
         PathResult longest = DAGLongestPath.longestPath(g, data.source, topoOrder, metrics);
 
-        // --- Формируем JSON ---
+        // JSON
         Map<String, Object> graphJson = new HashMap<>();
         graphJson.put("scc_count", sccResult.size());
 
-        // Метрики: собираем поля вручную для читаемого JSON
+        // metrics
         Map<String, Object> metricsJson = new HashMap<>();
         metricsJson.put("DFS_Visits", metrics.getDfsVisits());
         metricsJson.put("Edge_Visits", metrics.getEdgeVisits());
